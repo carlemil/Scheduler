@@ -49,7 +49,7 @@ function readSessions(){
         bestScore = evalSchedule(schedule);
         console.log("start score\n", bestScore);
 
-        for(a = 0; a < 10000; a++) {
+        for(a = 0; a < 1000; a++) {
             tmp = schedule.clone();
             //console.log("------\n--- schedule ---\n", schedule, "\n--- TMP ---\n", tmp);
             scrambleColumn(Math.floor(Math.random() * schedule[0].length), tmp);
@@ -107,20 +107,7 @@ function generateRndSchedule1(){
         [13,4,6,8,1],
         [13,4,6,8,1],
         [7,12,,,5],
-        [,,,,]
-    ];
-    return schedule;
-}
-
-function generateRndSchedule2(){
-    schedule = [
-        [2,3,9,10,0],
-        [2,3,9,10,5],
-        [2,3,9,10,11],
-        [13,4,6,8,11],
-        [13,4,6,8,1],
-        [7,12,,,1],
-        [,,,,]
+        [,,,,,]
     ];
     return schedule;
 }
@@ -149,9 +136,8 @@ function evalSchedule(schedule) {
     //console.log("--- cost ---\n", cost);
     return totalCost;
 }
-
+var asdf = [,];
 function scrambleColumn(column, schedule) {
-    //console.log("l\n", schedule);
     list = [];
     current = -1;
     for(i = 0; i < schedule.length; i++) {
@@ -162,25 +148,47 @@ function scrambleColumn(column, schedule) {
     }
     scrambledList = [];
     while(list.length > 0) {
-        //console.log("list \n", list);
         r = Math.floor(Math.random() * list.length);
         e = list[r];
         list.splice(r, 1);
-        //console.log(r, e);
         for(i = 0; i < sSlotsI[e]; i++) {
             scrambledList.push(e);
         }
     }
-    //console.log("scrambledList \n", scrambledList);
-    for(i = 0; i < schedule.length; i++) {
+    for(i = 0; i < scrambledList.length; i++) {
         schedule[i][column] = scrambledList[i];
     }
 }
 
 
 
+var PermutationGenerator = (function () {
+    var self = {};
 
+    self.getStartSequence = function (list) {
+        return list.slice(0).sort();
+    };
 
+    self.getNextSequence = function (list) {
+        // Make clone
+        var a = list.slice(0);
+        var k = -1;
+        for (var i = 0; i < a.length - 1; ++i) {
+            if (a[i] < a[i + 1]) { k = i; }
+        }
+        if (k == -1) return null; 
+        var l = -1;
+        for (var i = 0; i < a.length; ++i) {
+            if (a[k] < a[i]) { l = i };
+        }
+        if (l == -1) return null; 
+        var tmp = a[k]; a[k] = a[l]; a[l] = tmp;
+        var next = a.slice(0, k + 1).concat(a.slice(k + 1).reverse());
+        return next;
+    };
+
+    return self;
+} ());
 
 
 
