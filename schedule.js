@@ -23,10 +23,12 @@ function readVotes(){
             v2 = vote.slice(2,-1)
             votes.push(v2)
         });
-        console.log("votes", votes);
+        //console.log("votes", votes);
         readSessions();
     });
 }
+
+//function optimize
 
 function readSessions(){
     fs.readFile('sessions.dat', 'utf8', function (err,data) {
@@ -42,11 +44,36 @@ function readSessions(){
         setupSessionIndexes();
         calculateCollisionCosts();
 
-        schedule1 = generateRndSchedule1();
-        schedule2 = generateRndSchedule2();
-        console.log("score1\n", evalSchedule(schedule1));
-        console.log("score2\n", evalSchedule(schedule2));
+        schedule = generateRndSchedule1();
+
+        bestScore = evalSchedule(schedule);
+        console.log("start score\n", bestScore);
+
+        for(a = 0; a < 10000; a++) {
+            tmp = schedule.clone();
+            //console.log("------\n--- schedule ---\n", schedule, "\n--- TMP ---\n", tmp);
+            scrambleColumn(Math.floor(Math.random() * schedule[0].length), tmp);
+            tmpScore = evalSchedule(tmp);
+            if(tmpScore < bestScore) {
+                bestScore = tmpScore;
+                console.log("current best score\n", bestScore);
+                schedule = tmp;
+                console.log(tmpScore);
+            }
+        }
+        console.log("a",a);
+        console.log("--- schedule ---\n", schedule);
     });
+}
+
+Array.prototype.clone = function(){
+  return this.map(e => Array.isArray(e) ? e.clone() : e);
+};
+
+function copy(array) {
+  return array.map(function(arr) {
+    return arr.slice();
+  });
 }
 
 function setupSessionIndexes(){
@@ -78,8 +105,8 @@ function generateRndSchedule1(){
         [2,3,9,10,11],
         [2,3,9,10,0],
         [13,4,6,8,1],
-        [13,4,6,8,5],
-        [7,12,,,],
+        [13,4,6,8,1],
+        [7,12,,,5],
         [,,,,]
     ];
     return schedule;
@@ -87,12 +114,12 @@ function generateRndSchedule1(){
 
 function generateRndSchedule2(){
     schedule = [
-        [2,3,9,10,1],
+        [2,3,9,10,0],
         [2,3,9,10,5],
         [2,3,9,10,11],
         [13,4,6,8,11],
-        [13,4,6,8,0],
-        [7,12,,,],
+        [13,4,6,8,1],
+        [7,12,,,1],
         [,,,,]
     ];
     return schedule;
@@ -117,13 +144,38 @@ function evalSchedule(schedule) {
             rowSum += cost[i][j];
         }
         cost[i][nPTracks - 1] = rowSum;
-    totalCost += rowSum;
+        totalCost += rowSum;
     }
-    console.log("cost\n", cost);
+    //console.log("--- cost ---\n", cost);
     return totalCost;
 }
 
-
+function scrambleColumn(column, schedule) {
+    //console.log("l\n", schedule);
+    list = [];
+    current = -1;
+    for(i = 0; i < schedule.length; i++) {
+        if(schedule[i][column] != current && schedule[i][column] != undefined) {
+            current = schedule[i][column];
+            list.push(current);
+        }
+    }
+    scrambledList = [];
+    while(list.length > 0) {
+        //console.log("list \n", list);
+        r = Math.floor(Math.random() * list.length);
+        e = list[r];
+        list.splice(r, 1);
+        //console.log(r, e);
+        for(i = 0; i < sSlotsI[e]; i++) {
+            scrambledList.push(e);
+        }
+    }
+    //console.log("scrambledList \n", scrambledList);
+    for(i = 0; i < schedule.length; i++) {
+        schedule[i][column] = scrambledList[i];
+    }
+}
 
 
 
