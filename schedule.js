@@ -29,8 +29,6 @@ function readVotes(){
     });
 }
 
-//function optimize
-
 function readSessions(){
     fs.readFile('sessions.dat', 'utf8', function (err,data) {
         var lines = data.split("\n");
@@ -81,9 +79,7 @@ function bruteforce() {
             }
         }
     }
-    console.log("Iterations:",iterations);
-    console.log("Best score:", bestScore);
-    console.log("--- best schedule ---\n", schedule);
+    console.log("DONE");
 }
 
 Array.prototype.clone = function(){
