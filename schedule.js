@@ -45,34 +45,35 @@ function readSessions(){
         setupSessionIndexes();
         calculateCollisionCosts();
 
+        var bestScore = 999999;
+        var schedule = undefined;
+
         //var schedule = fixedSchedule2();
-        var schedule = getRndSchedule();
+        for (iterations = 0; iterations < 100000; iterations++){
+            schedule = getRndSchedule();
 
-        //generateRndSchedule();
-        console.log("--- initial schedule ---\n", schedule);
+            //console.log("--- initial schedule ---\n", schedule);
 
-        return;
-
-        bestScore = evalSchedule(schedule);
-        //console.log("start score\n", bestScore);
-        var iterations = 0;
-        var improving = true;
-        while(improving){
-            improving = false;
-            for(loop = 2; loop < 3; loop++) {//nPTracks; loop++) {
-                tmp = schedule.clone();
-                //scrambleColumn(Math.floor(Math.random() * schedule[0].length), tmp);
-                optimizeColumn(loop, tmp);
-                tmpScore = evalSchedule(tmp);
-                if(tmpScore < bestScore) {
-                    bestScore = tmpScore;
-                    console.log("current score:", bestScore);
-                    console.log("--- current schedule ---\n", schedule);
-                    schedule = tmp;
-                    //improving = true;
+            //bestScore = evalSchedule(schedule);
+            //console.log("start score\n", bestScore);
+            
+            var improving = true;
+            while(improving){
+                improving = false;
+                for(loop = 0; loop < nPTracks; loop++) {
+                    tmp = schedule.clone();
+                    //scrambleColumn(Math.floor(Math.random() * schedule[0].length), tmp);
+                    optimizeColumn(loop, tmp);
+                    tmpScore = evalSchedule(tmp);
+                    if(tmpScore < bestScore) {
+                        bestScore = tmpScore;
+                        console.log("current score:", bestScore);
+                        //console.log("--- current schedule ---\n", schedule);
+                        schedule = tmp;
+                        improving = true;
+                    }
                 }
             }
-            iterations++;
         }
         console.log("Iterations:",iterations);
         console.log("Best score:", bestScore);
@@ -106,6 +107,7 @@ function calculateCollisionCosts(){
     });
     //console.log("overLapCost\n", overLapCost);
 }
+
 // baka om schedule till en lista av listor med [ses#, slot_cost], summera slot_cost och om större än nSlots så är det ett ogiltigt schedule, ha en separat sum lista som vi gör + & - i för ev speedup senare.
 function fixedSchedule1(){
     schedule = [
@@ -119,6 +121,7 @@ function fixedSchedule1(){
     ];
     return schedule;
 }
+
 function fixedSchedule2(){
     schedule = [
         [ 1, 4, 7,10,12],
@@ -143,45 +146,46 @@ function getRndSchedule(){
     });
     var scheduleTrack = 0;
     var currentRow = 0;
-    console.log("sessionList:\n", sessionList);
+    //console.log("sessionList:\n", sessionList);
     var scheduleRow = [];
    
     while (keys.length > 0) {
-        var rnd = Math.floor(Math.random() * keys.length);
-        var key = keys[rnd];
-        var value = values[key];
-
-        if(keys.length > 1){
-            keys.splice(rnd, 1);
-        } else {
-            keys = [];
+        while(true){
+            var rnd = Math.floor(Math.random() * keys.length);
+            var key = keys[rnd];
+            var value = values[key];
+            //console.log("keys", keys);
+            //console.log("values", values);
+            //console.log("key", key);
+            //console.log("rnd", rnd);
+            if (scheduleRow.length + values[key] <= nSlots ) {
+                for (i = 0; i < values[key]; i++) {
+                    scheduleRow.push(key);
+                }
+                //console.log("scheduleRow: ", scheduleRow, scheduleRow.length);
+                if(keys.length > 1){
+                    keys.splice(rnd, 1);
+                } else {
+                    keys = [];
+                }
+            } else {
+                break;
+            }
         }
-        console.log("keys", keys);
-        console.log("values", values);
-        console.log("key", key);
-        console.log("rnd", rnd);
-
-        if (scheduleRow.length + values[key] <= nSlots ) {
-            for (i = 0; i < values[key]; i++) {
-                scheduleRow.push(key);
-            }
-            console.log("scheduleRow: ", scheduleRow, scheduleRow.length);
-        } else {
-            console.log("---------------");
-            console.log("scheduleRow.length: ", scheduleRow.length, "schedule.length", schedule.length);
-            //for (i = scheduleRow.length; i < schedule.length; i++) {
-            //    scheduleRow.push(0);
-            //}
-            for (i = 0; i < scheduleRow.length; i++) {
-                schedule[i][currentRow] = scheduleRow[i];
-            }
-            scheduleRow = [];
-            for (i = 0; i < values[key]; i++) {
-                scheduleRow.push(key);
-            }
-            currentRow++;
-            console.log("schedule:\n", schedule, currentRow,"\n------\n");
+        //console.log("---------------");
+        //console.log("scheduleRow.length: ", scheduleRow.length, "schedule.length", schedule.length);
+        //for (i = scheduleRow.length; i < schedule.length; i++) {
+        //    scheduleRow.push(0);
+        //}
+        for (i = 0; i < scheduleRow.length; i++) {
+            schedule[i][currentRow] = scheduleRow[i];
         }
+        scheduleRow = [];
+        //for (i = 0; i < values[key]; i++) {
+        //    scheduleRow.push(key);
+        //}
+        currentRow++;
+        //console.log("schedule:\n", schedule, currentRow,"\n------\n");
     }
 
     return schedule;
