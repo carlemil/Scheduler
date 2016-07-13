@@ -62,5 +62,20 @@ Best score: 12
   [ 0, 4, 8, 2, 0 ],
   [ 0, 6, 0, 2, 0 ] ]
 
+var votes = Object.keys(votesInList).map(function(key){
+        console.log("-key", key);
+        var votes4user = Object.keys(votesInList[key]);
+        console.log("votes4user---", votes4user);
+        var conflicts4user= [];
+        for (var i = 0; i < votes4user.length; i++) {
+            for (var j = i+1; j < votes4user.length; j++) {
+                var o = {};
+                o[votes4user[i]] = votes4user[j];
+                conflicts4user.push(o);
+            }
+        }
 
+        console.log("conflicts4user---", conflicts4user);
+        return conflicts4user;
+    });
 

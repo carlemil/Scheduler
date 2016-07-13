@@ -2,6 +2,8 @@ fs = require('fs')
 math = require('mathjs')
 R = require('ramda')
 
+var inputData = require('./inputExampleData.js');
+
 var votes=[];
 var sessions=[];
 var sNameI = {};
@@ -12,6 +14,42 @@ var nPTracks = 5;
 var nSlots = 7;
 
 readVotes();
+
+//sessions = getSessionsFromInput(inputData.getInput.events['-KM8gTVaMjn5yNfwyc_G']['sessions']);
+//votes = getVotesFromInput(inputData.getInput['user-votes']);
+//console.log("sessions:",sessions);
+//console.log("votes:",votes);
+
+//optimizeSchedule();
+
+function optimizeSchedule() {
+    setupDataStructures();
+    bruteforce();
+}
+
+function getVotesFromInput(votesInList){
+    var votes = Object.keys(votesInList).map(function(key){
+        var votes4user = Object.keys(votesInList[key]);
+        var conflicts4user= [];
+        for (var i = 0; i < votes4user.length; i++) {
+            for (var j = i+1; j < votes4user.length; j++) {
+                conflicts4user.push([votes4user[i], votes4user[j]]);
+            }
+        }
+        return conflicts4user;
+    });
+    var merged = [].concat.apply([], votes);
+    return merged;
+}
+
+function getSessionsFromInput(sessionInList){
+    var sessions = Object.keys(sessionInList).map(function(key){
+        var id = sessionInList[key].id;
+        var time = sessionInList[key].time;
+        return [id, time?time:1];
+    });
+    return sessions;
+}
 
 function readVotes(){
     fs.readFile('randomized_votes.dat', 'utf8', function (err,data) {
@@ -102,8 +140,10 @@ function calculateCollisionCosts(){
         v2 = vote[1];
         sNameI1 = sNameI[v1];
         sNameI2 = sNameI[v2];
-        overLapCost[sNameI1][sNameI2] += 1;
-        overLapCost[sNameI2][sNameI1] += 1;
+        if(sNameI1 != undefined && sNameI1 != undefined){
+            overLapCost[sNameI1][sNameI2] += 1;
+            overLapCost[sNameI2][sNameI1] += 1;
+        }
     });
 }
 
