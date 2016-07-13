@@ -79,3 +79,47 @@ var votes = Object.keys(votesInList).map(function(key){
         return conflicts4user;
     });
 
+
+readVotes
+ [ [ 'Cloud', 'Andr1' ],
+  [ 'Andr1', 'AWS1' ],
+  [ 'IoT', 'AWS1' ],
+  ... 100 more items ]
+readSessions
+ [ [ 'iOS1', '1' ],
+  [ 'iOS2', '2' ],
+  [ 'AWS2', '2' ] ]
+sNameI
+ { iOS1: 1,
+  iOS2: 2,
+  AWS2: 14 }
+sSlotsI
+ { '0': 1,
+  '1': 1,
+  '2': 2,
+  '3': 3,
+  '14': 2 }
+-------------------
+votes: [ [ '5759270dca221490002b12b5', '575ea3d83477fc404836099a' ],
+  [ '5759270dca221490002b12b5', '57628caa01f303f293380df4' ],
+  [ '575aaa1fc545852d8452df72', '57628caa01f303f293380df4' ],
+  [ '575923f2edf0c24af79fd8b0', '5759270dca221490002b12b5' ] ]
+sessions: [ [ '575923f2edf0c24af79fd8b0', 2 ],
+  [ '5759270dca221490002b12b5', 2 ],
+  [ '576a466a529f08c26d9df96e', 2 ],
+  [ '576a46d04a3521545cf68b7c', 2 ] ]
+sNameI
+ { '575923f2edf0c24af79fd8b0': 1,
+  '5759270dca221490002b12b5': 2,
+  '576a46d04a3521545cf68b7c': 9 }
+sSlotsI
+ { '0': 1,
+  '1': 2,
+  '9': 2 }
+
+
+
+
+
+
+

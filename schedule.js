@@ -13,18 +13,18 @@ var overLapCost = [];
 var nPTracks = 5;
 var nSlots = 7;
 
-readVotes();
+//readVotes();
+readInputData();
 
-//sessions = getSessionsFromInput(inputData.getInput.events['-KM8gTVaMjn5yNfwyc_G']['sessions']);
-//votes = getVotesFromInput(inputData.getInput['user-votes']);
-//console.log("sessions:",sessions);
-//console.log("votes:",votes);
+function readInputData() {
+    sessions = getSessionsFromInput(inputData.getInput.events['-KM8gTVaMjn5yNfwyc_G']['sessions']);
+    votes = getVotesFromInput(inputData.getInput['user-votes']);
+    console.log("sessions:",sessions);
+    console.log("votes:",votes);
 
-//optimizeSchedule();
-
-function optimizeSchedule() {
     setupDataStructures();
-    bruteforce();
+    setupDataStructures();
+    bruteforce()
 }
 
 function getVotesFromInput(votesInList){
@@ -62,7 +62,7 @@ function readVotes(){
             v2 = vote.slice(2,-1)
             votes.push(v2)
         });
-        //console.log("votes", votes);
+        console.log("readVotes\n", votes);
         readSessions();
     });
 }
@@ -75,7 +75,7 @@ function readSessions(){
             session = line.split(" ");
             sessions.push(session)
         });
-
+        console.log("readSessions\n", sessions);
         setupDataStructures();
         bruteforce();
 
@@ -96,7 +96,7 @@ function bruteforce() {
 
     for (iterations = 0; iterations < 10000; iterations++){
         schedule = getRndSchedule();
-
+        console.log("schedule",schedule);
         var improving = true;
         while(improving){
             improving = false;
