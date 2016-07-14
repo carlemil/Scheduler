@@ -31,95 +31,16 @@ sessionList:
   '13': 1,
   '14': 2 }
 
-Best score: 15
+Iterations: 355997
+Best score: 17
 --- best schedule ---
- [ [ 1, 7, 11, 14, 8 ],
-  [ 13, 7, 11, 14, 10 ],
-  [ 9, 0, 11, 6, 10 ],
-  [ 9, 4, 5, 2, 10 ],
-  [ 3, 4, 5, 2, 0 ],
-  [ 3, 4, 0, 12, 0 ],
-  [ 3, 0, 0, 12, 0 ] ]
-
-Best score: 13
---- best schedule ---
- [ [ 3, 2, 14, 6, 12 ],
-  [ 3, 2, 14, 9, 12 ],
-  [ 3, 13, 10, 9, 5 ],
-  [ 4, 7, 10, 11, 5 ],
-  [ 4, 7, 10, 11, 0 ],
-  [ 4, 1, 0, 11, 0 ],
-  [ 0, 8, 0, 0, 0 ] ]
-
-Iterations: 605568
-Best score: 12
---- best schedule ---
- [ [ 14, 13, 10, 12, 3 ],
-  [ 14, 9, 10, 12, 3 ],
-  [ 11, 9, 10, 1, 3 ],
-  [ 11, 4, 5, 7, 0 ],
-  [ 11, 4, 5, 7, 0 ],
-  [ 0, 4, 8, 2, 0 ],
-  [ 0, 6, 0, 2, 0 ] ]
-
-var votes = Object.keys(votesInList).map(function(key){
-        console.log("-key", key);
-        var votes4user = Object.keys(votesInList[key]);
-        console.log("votes4user---", votes4user);
-        var conflicts4user= [];
-        for (var i = 0; i < votes4user.length; i++) {
-            for (var j = i+1; j < votes4user.length; j++) {
-                var o = {};
-                o[votes4user[i]] = votes4user[j];
-                conflicts4user.push(o);
-            }
-        }
-
-        console.log("conflicts4user---", conflicts4user);
-        return conflicts4user;
-    });
-
-
-readVotes
- [ [ 'Cloud', 'Andr1' ],
-  [ 'Andr1', 'AWS1' ],
-  [ 'IoT', 'AWS1' ],
-  ... 100 more items ]
-readSessions
- [ [ 'iOS1', '1' ],
-  [ 'iOS2', '2' ],
-  [ 'AWS2', '2' ] ]
-sNameI
- { iOS1: 1,
-  iOS2: 2,
-  AWS2: 14 }
-sSlotsI
- { '0': 1,
-  '1': 1,
-  '2': 2,
-  '3': 3,
-  '14': 2 }
--------------------
-votes: [ [ '5759270dca221490002b12b5', '575ea3d83477fc404836099a' ],
-  [ '5759270dca221490002b12b5', '57628caa01f303f293380df4' ],
-  [ '575aaa1fc545852d8452df72', '57628caa01f303f293380df4' ],
-  [ '575923f2edf0c24af79fd8b0', '5759270dca221490002b12b5' ] ]
-sessions: [ [ '575923f2edf0c24af79fd8b0', 2 ],
-  [ '5759270dca221490002b12b5', 2 ],
-  [ '576a466a529f08c26d9df96e', 2 ],
-  [ '576a46d04a3521545cf68b7c', 2 ] ]
-sNameI
- { '575923f2edf0c24af79fd8b0': 1,
-  '5759270dca221490002b12b5': 2,
-  '576a46d04a3521545cf68b7c': 9 }
-sSlotsI
- { '0': 1,
-  '1': 2,
-  '9': 2 }
-
-
-
-
+ [ [ 12, 14, 3, 10, 11, 13 ],
+  [ 12, 14, 3, 10, 11 ],
+  [ 1, 5, 3, 10, 11 ],
+  [ 7, 5, 4, 2, 9 ],
+  [ 7, 0, 4, 2, 9 ],
+  [ 0, 0, 4, 0, 8 ],
+  [ 0, 0, 0, 0, 6 ] ]
 
 
 
