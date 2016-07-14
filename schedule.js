@@ -105,7 +105,7 @@ function readVotes() {
                 }
             }
         });
-        console.log("readVotes\n", votes, ", nbr of votes:", votes.length);
+        //console.log("readVotes\n", votes, ", nbr of votes:", votes.length);
         readSessions();
     });
 }
@@ -118,9 +118,13 @@ function readSessions() {
             session = line.split(" ");
             sessions.push(session)
         });
-        console.log("readSessions\n", sessions);
+        //console.log("readSessions\n", sessions);
         setupDataStructures();
         bruteforce();
+
+        //var s = fixedScheduleDarius1();
+        //var v = evalSchedule(s);
+        //console.log(v);
 
     });
 }
@@ -137,7 +141,7 @@ function bruteforce() {
     var bestScore = 999999;
     var schedule = undefined;
 
-    for (iterations = 0; iterations < 10000000; iterations++) {
+    for (iterations = 0; iterations < 10000; iterations++) {
         schedule = getRndSchedule();
         //console.log("schedule",schedule);
         var improving = true;
@@ -189,9 +193,6 @@ function calculateCollisionCosts() {
             l.push(sNameI2+"-"+sNameI1);
         }
     });
-    console.log("overLapCost\n",overLapCost,"\nC:::",c);
-    console.log(JSON.stringify(votes));
-    console.log(JSON.stringify(l));
 }
 
 // baka om schedule till en lista av listor med [ses#, slot_cost], summera slot_cost och om större än nSlots så är det ett ogiltigt schedule, ha en separat sum lista som vi gör + & - i för ev speedup senare.
@@ -207,20 +208,45 @@ function fixedSchedule1() {
     ];
     return schedule;
 }
-
-function fixedSchedule2() {
+/*
+ iOS1: 1,
+ iOS2: 2,
+ Azur1: 3,
+ Pyth: 4,
+ Azur2: 5,
+ IoT: 6,
+ Andr1: 7,
+ Andr2: 8,
+ Java1: 9,
+ Java2: 10,
+ Scala: 11,
+ AWS1: 12,
+ Cloud: 13,
+ AWS2: 14
+ */
+function fixedScheduleDarius1() {
     schedule = [
-        [1, 4, 7, 10, 12],
-        [2, 4, 7, 10, 12],
-        [2, 4, 8, 10, 13],
-        [3, 5, 9, 11, 14],
-        [3, 5, 9, 11, 14],
-        [3, 6, 0, 11, 0],
-        [0, 0, 0, 0, 0]
+        [ 3, 5, 0, 7, 9],
+        [ 3, 5, 2, 7, 9],
+        [ 3, 0, 2, 0, 6],
+        [11,10, 3, 1, 0],
+        [11,10, 3,14,12],
+        [11,10, 3,14,12],
+        [ 0, 8, 0, 0,13]
     ];
     return schedule;
 }
 
+function fixedScheduleDarius1() {
+    schedule = [ [ 12, 14, 3, 10, 11, 13 ],
+    [ 12, 14, 3, 10, 11 ],
+    [ 1, 5, 3, 10, 11 ],
+    [ 7, 5, 4, 2, 9 ],
+    [ 7, 0, 4, 2, 9 ],
+    [ 0, 0, 4, 0, 8 ],
+    [ 0, 0, 0, 0, 6 ] ];
+    return schedule;
+}
 function getRndSchedule() {
     var sessionList = R.clone(sSlotsI);
     var schedule = math.zeros(nSlots, nPTracks).valueOf();
