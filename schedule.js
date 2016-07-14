@@ -60,12 +60,17 @@ function readInputData() {
     // console.log("votes:", votes);
 
     setupDataStructures();
-    bruteforce();
-    getOutputSchedule();
+    var schedule = bruteforce();
+    updateOutputSchedule(schedule);
 }
 
-function getOutputSchedule(){
-
+function updateOutputSchedule(schedule) {
+    var schedules = inputData.getOutput.schedules;
+    for (var i = 0; i < nSlots; i++) {
+        for (var j = i + 1; j < nPTracks; j++) {
+            slot = schedule[i][j];
+        }
+    }
 }
 
 function getVotesFromInput(votesInList) {
@@ -96,18 +101,50 @@ function readVotes() {
     fs.readFile('randomized_votes.dat', 'utf8', function (err, data) {
         var lines = data.split("\n");
         lines = lines.slice(1, -1)
+
+        var tm = {};
+
         lines.forEach(function (line) {
             var vote = line.split(" ");
-            vote = vote.slice(1,-1);
+            vote = vote.slice(1, -1);
             for (var i = 0; i < vote.length; i++) {
                 for (var j = i + 1; j < vote.length; j++) {
                     votes.push([vote[i], vote[j]]);
+                    var n = "";
+                    if (vote[i] < vote[j]) {
+                        n = vote[i] + "-" + vote[j];
+                    } else {
+                        n = vote[j] + "-" + vote[i];
+                    }
+                    if (tm[n] == undefined) {
+                        tm[n] = 1;
+                    } else {
+                        tm[n] = tm[n] + 1;
+                    }
                 }
             }
         });
-        //console.log("readVotes\n", votes, ", nbr of votes:", votes.length);
+        // console.log("readVotes\n", votes, ", nbr of votes:", votes.length);
+        //console.log(sortObject(tm));
         readSessions();
     });
+}
+
+function sortObject(obj) {
+    var arr = [];
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            arr.push({
+                'key': prop,
+                'value': obj[prop]
+            });
+        }
+    }
+    arr.sort(function (a, b) {
+        return b.value - a.value;
+    });
+    //arr.sort(function(a, b) { a.value.toLowerCase().localeCompare(b.value.toLowerCase()); }); //use this to sort as strings
+    return arr; // returns array
 }
 
 function readSessions() {
@@ -165,6 +202,7 @@ function bruteforce() {
         }
     }
     console.log("DONE");
+    return schedule;
 }
 
 function setupSessionIndexes() {
@@ -178,8 +216,8 @@ function setupSessionIndexes() {
 }
 
 function calculateCollisionCosts() {
-    var c=0;
-    var l=[];
+    var c = 0;
+    var l = [];
     votes.forEach(function (vote, index, array) {
         v1 = vote[0];
         v2 = vote[1];
@@ -189,8 +227,8 @@ function calculateCollisionCosts() {
             overLapCost[sNameI1][sNameI2] += 1;
             overLapCost[sNameI2][sNameI1] += 1;
             c++;
-            l.push(sNameI1+"-"+sNameI2);
-            l.push(sNameI2+"-"+sNameI1);
+            l.push(sNameI1 + "-" + sNameI2);
+            l.push(sNameI2 + "-" + sNameI1);
         }
     });
 }
@@ -226,27 +264,17 @@ function fixedSchedule1() {
  */
 function fixedScheduleDarius1() {
     schedule = [
-        [ 3, 5, 0, 7, 9],
-        [ 3, 5, 2, 7, 9],
-        [ 3, 0, 2, 0, 6],
-        [11,10, 3, 1, 0],
-        [11,10, 3,14,12],
-        [11,10, 3,14,12],
-        [ 0, 8, 0, 0,13]
+        [3, 5, 0, 7, 9],
+        [3, 5, 2, 7, 9],
+        [3, 0, 2, 0, 6],
+        [11, 10, 3, 1, 0],
+        [11, 10, 3, 14, 12],
+        [11, 10, 3, 14, 12],
+        [0, 8, 0, 0, 13]
     ];
     return schedule;
 }
 
-function fixedScheduleDarius1() {
-    schedule = [ [ 12, 14, 3, 10, 11, 13 ],
-    [ 12, 14, 3, 10, 11 ],
-    [ 1, 5, 3, 10, 11 ],
-    [ 7, 5, 4, 2, 9 ],
-    [ 7, 0, 4, 2, 9 ],
-    [ 0, 0, 4, 0, 8 ],
-    [ 0, 0, 0, 0, 6 ] ];
-    return schedule;
-}
 function getRndSchedule() {
     var sessionList = R.clone(sSlotsI);
     var schedule = math.zeros(nSlots, nPTracks).valueOf();
