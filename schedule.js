@@ -44,6 +44,7 @@ var PermutationGenerator = (function () {
 var votes = [];
 var sessions = [];
 var sNameI = {};
+var iNameS = {};
 var sSlotsI = {};
 var overLapCost = [];
 
@@ -65,10 +66,13 @@ function readInputData() {
 }
 
 function updateOutputSchedule(schedule) {
-    var schedules = inputData.getOutput.schedules;
+    var output = inputData.getOutput.schedules;
+    console.log("output", output);
     for (var i = 0; i < nSlots; i++) {
         for (var j = i + 1; j < nPTracks; j++) {
             slot = schedule[i][j];
+            a = iNameS[slot];
+            console.log("a",a);
         }
     }
 }
@@ -178,7 +182,7 @@ function bruteforce() {
     var bestScore = 999999;
     var schedule = undefined;
 
-    for (iterations = 0; iterations < 10000; iterations++) {
+    for (iterations = 0; iterations < 10; iterations++) {
         schedule = getRndSchedule();
         //console.log("schedule",schedule);
         var improving = true;
@@ -208,9 +212,11 @@ function bruteforce() {
 function setupSessionIndexes() {
     sSlotsI[0] = 1;
     for (i = 0; i < sessions.length; i++) {
+        iNameS[i + 1] = sessions[i][0]
         sNameI[sessions[i][0]] = i + 1;
         sSlotsI[i + 1] = parseInt(sessions[i][1]);
     }
+    console.log("iNameS\n", iNameS);
     console.log("sNameI\n", sNameI);
     console.log("sSlotsI\n", sSlotsI);
 }
